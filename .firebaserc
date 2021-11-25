@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "scrumpockerpicker-255a4": {
+      "hosting": {
+        "scrumPokerPicker": [
+          "scrumpockerpicker-255a4"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "scrumpockerpicker-255a4"
+  }
+}

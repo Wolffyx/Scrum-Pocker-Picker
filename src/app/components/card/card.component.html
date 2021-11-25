@@ -1,0 +1,27 @@
+<div class="grid flex-column align-items-center ">
+	<div class="col">
+		{{player.player.name}}
+	</div>
+	<div [class]="player.card ? 'pickedCard': (player.visible ? 'showedCards': '')"
+		 class="col shadow-2 p-3 border-round justify-content-center card">
+		<div *ngIf="player.visible">
+			{{player.card}}
+		</div>
+	</div>
+</div>
+<!--	<nb-flip-card>-->
+<!--		<nb-card-front>-->
+<!--			<nb-card>-->
+<!--				<nb-card-body>-->
+<!--					-->
+<!--				</nb-card-body>-->
+<!--			</nb-card>-->
+<!--		</nb-card-front>-->
+<!--		<nb-card-back>-->
+<!--			<nb-card>-->
+<!--				<nb-card-body>-->
+<!--					{{player.card}}-->
+<!--				</nb-card-body>-->
+<!--			</nb-card>-->
+<!--		</nb-card-back>-->
+<!--	</nb-flip-card>-->

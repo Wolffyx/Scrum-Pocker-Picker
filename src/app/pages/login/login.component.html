@@ -1,0 +1,13 @@
+<div class="grid">
+	<div class="col">
+		<p-card>
+			<ng-template pTemplate="header">
+				Header content here
+			</ng-template>
+			<input [(ngModel)]="username" pInputText placeholder="Username" type="text">
+			<ng-template pTemplate="footer">
+				<button (click)="login()" pButton>test</button>
+			</ng-template>
+		</p-card>
+	</div>
+</div>

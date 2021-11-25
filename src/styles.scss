@@ -1,1 +1,93 @@
+@import 'themes';
+
+//@import '~@nebular/theme/styles/globals';
+////@import '~@nebular/theme/styles/prebuilt/default';
+//
+//@include nb-install() {
+//  @include nb-theme-global();
+//};
 /* You can add global styles to this file, and also import other style files */
+html {
+	height: 100%;
+	width: 100%;
+}
+
+body {
+	margin: 0;
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+	background-color: var(--surface-a);
+	font-family: var(--font-family);
+	font-weight: normal;
+	color: var(--text-color);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+$sizes: 12;
+
+@mixin margin-classes {
+	@for $i from 1 through $sizes {
+		$margin: $i * 0.25rem;
+		/* margin #{$margin} */
+		.m#{$i} {
+			margin: $margin;
+		}
+		.ml#{$i} {
+			margin-left: $margin;
+		}
+		.mr#{$i} {
+			margin-right: $margin;
+		}
+		.mt#{$i} {
+			margin-top: $margin;
+		}
+		.mb#{$i} {
+			margin-bottom: $margin;
+		}
+		.mx#{$i} {
+			margin-left: $margin;
+			margin-right: $margin;
+		}
+		.my#{$i} {
+			margin-top: $margin;
+			margin-bottom: $margin;
+		}
+	}
+}
+
+@include margin-classes;
+
+
+@mixin padding-classes {
+	@for $i from 1 through $sizes {
+		$padding: $i * 0.25rem;
+		/* padding #{$padding} */
+		.p#{$i} {
+			padding: $padding;
+		}
+		.pl#{$i} {
+			padding-left: $padding;
+		}
+		.pr#{$i} {
+			padding-right: $padding;
+		}
+		.pt#{$i} {
+			padding-top: $padding;
+		}
+		.pb#{$i} {
+			padding-bottom: $padding;
+		}
+		.px#{$i} {
+			padding-left: $padding;
+			padding-right: $padding;
+		}
+		.py#{$i} {
+			padding-top: $padding;
+			padding-bottom: $padding;
+		}
+	}
+}
+
+@include padding-classes;

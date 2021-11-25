@@ -1,0 +1,22 @@
+//.pokerCard{
+//	position: relative;
+//	width: 50px;
+//	height: 100px;
+//}
+:host ::ng-deep {
+	.card {
+		width: 40px;
+		height: 60px;
+		min-height: 60px;
+	}
+
+	.pickedCard {
+		background-color: #0071fc;
+	}
+
+	.showCards {
+		background-color: transparent;
+		outline: 1px solid black;
+
+	}
+}

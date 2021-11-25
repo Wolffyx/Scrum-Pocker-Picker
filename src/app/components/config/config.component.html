@@ -1,0 +1,253 @@
+<div [ngClass]="{'layout-config-active': active}" class="layout-config">
+	<div class="layout-config-content-wrapper">
+		<a (click)="toggleConfigurator($event)" class="layout-config-button" tabindex="0">
+			<i class="pi pi-cog"></i>
+		</a>
+		<a (click)="hideConfigurator($event)" class="layout-config-close" tabindex="0">
+			<i class="pi pi-times"></i>
+		</a>
+		<div class="layout-config-content">
+			<div>
+				<h4>Component Scale</h4>
+				<div class="config-scale">
+					<button (click)="decrementScale()" [disabled]="scale === scales[0]" class="p-button-text"
+							icon="pi pi-minus" pButton type="button"></button>
+					<i *ngFor="let s of scales" [ngClass]="{'scale-active': s === scale}" class="pi pi-circle-on"></i>
+					<button (click)="incrementScale()" [disabled]="scale === scales[scales.length - 1]"
+							class="p-button-text" icon="pi pi-plus" pButton type="button"></button>
+				</div>
+				<app-input-style-switch></app-input-style-switch>
+				<h4>Ripple Effect</h4>
+				<p-inputSwitch (onChange)="onRippleChange()" [(ngModel)]="config.ripple"></p-inputSwitch>
+				<h4>Free Themes</h4>
+				<h5>Bootstrap</h5>
+				<div class="grid free-themes">
+					<div class="col">
+						<button (click)="changeTheme($event, 'bootstrap4-light-blue', false)" class="p-link">
+							<img alt="Bootstrap Light Blue" src="assets/images/themes/bootstrap4-light-blue.svg"/>
+						</button>
+						<span>Blue</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'bootstrap4-light-purple', false)" class="p-link">
+							<img alt="Bootstrap Light Purple" src="assets/images/themes/bootstrap4-light-purple.svg"/>
+						</button>
+						<span>Purple</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'bootstrap4-dark-blue', true)" class="p-link">
+							<img alt="Bootstrap Dark Blue" src="assets/images/themes/bootstrap4-dark-blue.svg"/>
+						</button>
+						<span>Blue</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'bootstrap4-dark-purple', true)" class="p-link">
+							<img alt="Bootstrap Dark Purple" src="assets/images/themes/bootstrap4-dark-purple.svg"/>
+						</button>
+						<span>Purple</span>
+					</div>
+				</div>
+				<h5>Material Design</h5>
+				<div class="grid free-themes">
+					<div class="col">
+						<button (click)="changeTheme($event, 'md-light-indigo', false)" class="p-link">
+							<img alt="Material Light Indigo" src="assets/images/themes/md-light-indigo.svg"/>
+						</button>
+						<span>Indigo</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'md-light-deeppurple', false)" class="p-link">
+							<img alt="Material Light Deep Purple" src="assets/images/themes/md-light-deeppurple.svg"/>
+						</button>
+						<span>Deep Purple</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'md-dark-indigo', true)" class="p-link">
+							<img alt="Material Dark Indigo" src="assets/images/themes/md-dark-indigo.svg"/>
+						</button>
+						<span>Indigo</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'md-dark-deeppurple', true)" class="p-link">
+							<img alt="Material Dark Deep Purple" src="assets/images/themes/md-dark-deeppurple.svg"/>
+						</button>
+						<span>Deep Purple</span>
+					</div>
+				</div>
+				<h5>Material Design Compact</h5>
+				<div class="grid free-themes">
+					<div class="col">
+						<button (click)="changeTheme($event, 'mdc-light-indigo', false)" class="p-link">
+							<img alt="Material Compact Light Indigo" src="assets/images/themes/md-light-indigo.svg"/>
+						</button>
+						<span>Indigo</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'mdc-light-deeppurple', false)" class="p-link">
+							<img alt="Material Compact Deep Purple" src="assets/images/themes/md-light-deeppurple.svg"/>
+						</button>
+						<span>Deep Purple</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'mdc-dark-indigo', true)" class="p-link">
+							<img alt="Material Compact Dark Indigo" src="assets/images/themes/md-dark-indigo.svg"/>
+						</button>
+						<span>Indigo</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'mdc-dark-deeppurple', true)" class="p-link">
+							<img alt="Material Compact Dark Deep Purple"
+								 src="assets/images/themes/md-dark-deeppurple.svg"/>
+						</button>
+						<span>Deep Purple</span>
+					</div>
+				</div>
+				<h5>Tailwind</h5>
+				<div class="grid free-themes">
+					<div class="col">
+						<button (click)="changeTheme($event, 'tailwind-light', false)" class="p-link">
+							<img alt="Tailwind Light" src="assets/images/themes/tailwind-light.png"/>
+						</button>
+						<span>Tailwind Light</span>
+					</div>
+				</div>
+				<h5>Fluent UI</h5>
+				<div class="grid free-themes">
+					<div class="col">
+						<button (click)="changeTheme($event, 'fluent-light', false)" class="p-link">
+							<img alt="Fluent Light" src="assets/images/themes/fluent-light.png"/>
+						</button>
+						<span>Light</span>
+					</div>
+				</div>
+				<h5>PrimeOne Design</h5>
+				<div class="grid free-themes">
+					<div class="col">
+						<button (click)="changeTheme($event, 'saga-blue', false)" class="p-link">
+							<img alt="Saga Blue" src="assets/images/themes/saga-blue.png"/>
+						</button>
+						<span>Saga Blue</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'saga-green', false)" class="p-link">
+							<img alt="Saga Green" src="assets/images/themes/saga-green.png"/>
+						</button>
+						<span>Saga Green</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'saga-orange', false)" class="p-link">
+							<img alt="Saga Orange" src="assets/images/themes/saga-orange.png"/>
+						</button>
+						<span>Saga Orange</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'saga-purple', false)" class="p-link">
+							<img alt="Saga Purple" src="assets/images/themes/saga-purple.png"/>
+						</button>
+						<span>Saga Purple</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'vela-blue', true)" class="p-link">
+							<img alt="Vela Blue" src="assets/images/themes/vela-blue.png"/>
+						</button>
+						<span>Vela Blue</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'vela-green', true)" class="p-link">
+							<img alt="Vela Green" src="assets/images/themes/vela-green.png"/>
+						</button>
+						<span>Vela Green</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'vela-orange', true)" class="p-link">
+							<img alt="Vela Orange" src="assets/images/themes/vela-orange.png"/>
+						</button>
+						<span>Vela Orange</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'vela-purple', true)" class="p-link">
+							<img alt="Vela Purple" src="assets/images/themes/vela-purple.png"/>
+						</button>
+						<span>Vela Purple</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'arya-blue', true)" class="p-link">
+							<img alt="Arya Blue" src="assets/images/themes/arya-blue.png"/>
+						</button>
+						<span>Arya Blue</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'arya-green', true)" class="p-link">
+							<img alt="Arya Green" src="assets/images/themes/arya-green.png"/>
+						</button>
+						<span>Arya Green</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'arya-orange', true)" class="p-link">
+							<img alt="Arya Orange" src="assets/images/themes/arya-orange.png"/>
+						</button>
+						<span>Arya Orange</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'arya-purple', true)" class="p-link">
+							<img alt="Arya Purple" src="assets/images/themes/arya-purple.png"/>
+						</button>
+						<span>Arya Purple</span>
+					</div>
+				</div>
+				<h4>Legacy Free Themes</h4>
+				<div class="grid free-themes">
+					<div class="col">
+						<button (click)="changeTheme($event, 'nova', false)" class="p-link">
+							<img alt="Nova" src="assets/images/themes/nova.png"/>
+						</button>
+						<span>Nova</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'nova-alt', false)" class="p-link">
+							<img alt="Nova Alt" src="assets/images/themes/nova-alt.png"/>
+						</button>
+						<span>Nova Alt</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'nova-accent', false)" class="p-link">
+							<img alt="Nova Accent" src="assets/images/themes/nova-accent.png"/>
+						</button>
+						<span>Nova Accent</span>
+					</div>
+					<div class="col"></div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'luna-blue', true)" class="p-link">
+							<img alt="Luna Blue" src="assets/images/themes/luna-blue.png"/>
+						</button>
+						<span>Luna Blue</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'luna-green', true)" class="p-link">
+							<img alt="Luna Green" src="assets/images/themes/luna-green.png"/>
+						</button>
+						<span>Luna Green</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'luna-amber', true)" class="p-link">
+							<img alt="Luna Amber" src="assets/images/themes/luna-amber.png"/>
+						</button>
+						<span>Luna Amber</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'luna-pink', true)" class="p-link">
+							<img alt="Luna Pink" src="assets/images/themes/luna-pink.png"/>
+						</button>
+						<span>Luna Pink</span>
+					</div>
+					<div class="col">
+						<button (click)="changeTheme($event, 'rhea', false)" class="p-link">
+							<img alt="Rhea" src="assets/images/themes/rhea.png"/>
+						</button>
+						<span>Rhea</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

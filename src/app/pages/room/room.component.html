@@ -1,0 +1,38 @@
+<ng-container *ngIf="room$ | async as room">
+	<div class="grid flex-column align-items-center">
+		<div class="col">
+			<p>{{room.name}}</p>
+		</div>
+	</div>
+
+	<div class="grid">
+		<div class="col-12 board surface-card shadow-2 p-3 border-round">
+			<div>
+				{{average}}
+			</div>
+		</div>
+		<div *ngFor="let player of players | async" class="players col m2">
+			<button (click)="showCards()" *ngIf="player.id === user.id && player.owner && player.card" class="showCards"
+					pButton>Show cards
+			</button>
+			<app-card [player]="player"></app-card>
+		</div>
+	</div>
+	<div class="surface-card shadow-2 p-3 border-round grid justify-content-center">
+		<button (click)="chose(card)" *ngFor="let card of cards" class="col m-1 card text-xl text-center"
+				label="{{card}}"
+				pButton></button>
+	</div>
+</ng-container>
+<!--	todo create round table-->
+<!--	<div class="container">-->
+<!--		<div></div>-->
+<!--		<div></div>-->
+<!--		<div></div>-->
+<!--		<div></div>-->
+<!--		<div></div>-->
+<!--		<div></div>-->
+<!--		<div></div>-->
+<!--		<div></div>-->
+<!--		<div></div>-->
+<!--	</div>-->
