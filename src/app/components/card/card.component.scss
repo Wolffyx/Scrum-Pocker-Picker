@@ -8,6 +8,13 @@
 		width: 40px;
 		height: 60px;
 		min-height: 60px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.visibleCard {
+		border: 2px solid #0071fc;
 	}
 
 	.pickedCard {

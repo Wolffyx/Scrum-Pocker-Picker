@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { RoomService } from '../../services/room.service'
 import { AuthService } from '../../services/auth.service'
-import { Player } from '../../interfaces/Player'
 
 @Component({
 	selector: 'app-home',
@@ -9,7 +8,7 @@ import { Player } from '../../interfaces/Player'
 	styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-	user: Player | any
+	user: any
 
 	constructor(
 		private pick: RoomService,
@@ -22,7 +21,7 @@ export class HomeComponent implements OnInit {
 	}
 
 
-	test() {
+	createRoom() {
 		this.pick.create('test', this.user)
 	}
 }

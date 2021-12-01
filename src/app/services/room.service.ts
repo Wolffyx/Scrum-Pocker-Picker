@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core'
 import { AngularFireDatabase } from '@angular/fire/compat/database'
-import { AngularFireAuth } from '@angular/fire/compat/auth'
 
-import { AuthService } from './auth.service'
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore'
 import { Router } from '@angular/router'
 import * as cryptoJs from 'crypto-js'
@@ -20,16 +18,9 @@ export class RoomService {
 
 	constructor(
 		private afs: AngularFirestore,
-		private authService: AuthService,
 		private router: Router,
 		private db: AngularFireDatabase,
-		private auth: AngularFireAuth,
 	) {
-		// this.auth.authState.subscribe(auth => {
-		// 	if (auth !== undefined && auth !== null) {
-		// 		this.player = auth
-		// 	}
-		// })
 	}
 
 	get(roomID: string): AngularFirestoreDocument<Room> {
@@ -38,31 +29,28 @@ export class RoomService {
 			.doc(roomID)
 	}
 
-	getRoom() {
-		return this.db.list('rooms')
-	}
-
-	async create(name: string, player: Player) {
+	async create(name: string, player: any) {
 		const uid = cryptoJs.AES.encrypt(name, environment.key).toString()
-		console.log(player)
 		const data = {
 			uid,
 			name,
-			created: player.id,
+			created: player.uid,
 			createdAt: Date.now(),
 		}
 		const ownerData: RoomPlayer = {
-			id: player.id,
-			player: player,
+			uid: player.uid,
+			player: {
+				uid: player.uid,
+				name: player.displayName,
+			},
 			card: null,
 			status: true,
 			visible: false,
-			owner: true,
 			spectate: false,
 		}
 		console.log(player)
 		const room = await this.afs.collection('rooms').add(data)
-		await room.collection('players').doc(player.id).set(ownerData)
+		await room.collection('players').doc(player.uid).set(ownerData)
 		return this.router.navigate(['room', room.id])
 	}
 
@@ -73,7 +61,7 @@ export class RoomService {
 			visible: false,
 		}
 
-		const ref = room.collection('players').doc(player.id).update(data)
+		const ref = room.collection('players').doc(player.uid).update(data)
 		// const toastRef: NbToastRef = this.toast.success("Card picked");
 		// toastRef.close();
 		// console.log(ref.)
@@ -82,17 +70,19 @@ export class RoomService {
 	// @ts-ignore
 	joinUsers(room: AngularFirestoreDocument<Room>, player: Player, roomID): AngularFirestoreCollection<DocumentData> {
 		const data: RoomPlayer = {
+			uid: player.uid,
+			player: {
+				uid: player.uid,
+				name: player.displayName,
+			},
 			card: null,
-			visible: false,
 			status: true,
+			visible: false,
 			spectate: false,
-			id: player.id,
-			owner: false,
-			player: player,
 		}
 		// const playerData = {id: player.id, uid: player.uid}
 		const players = room.collection('players')
-		const playerData = players.doc(player.id).get().toPromise()
+		const playerData = players.doc(player.uid).get().toPromise()
 		playerData.then(async (player) => {
 			if (!player.exists) {
 				await players.doc(player.id).set(data)
@@ -101,17 +91,25 @@ export class RoomService {
 			console.log(player.exists)
 		})
 		console.log(roomID,
-			player.id)
-		console.log(this.db.database.ref().onDisconnect())
+			player.uid)
+		this.removeUser(room, player)
 		return players.valueChanges()
 	}
 
 	deleteUser(room: AngularFirestoreDocument<Room>, player: Player) {
-		return room.collection('players').doc(player.id).delete()
+		return room.collection('players').doc(player.uid).delete()
 	}
 
 	showCards(roomID: string) {
 		console.log('cards shown')
 		return this.afs.collection('rooms').doc<Room>(roomID).get({})
+	}
+
+	private removeUser(room: any, user: any) {
+		console.log(user.uid)
+		this.db.database.ref(user.uid).onDisconnect().update({status: 'offline'}).then(() => {
+			room.collection('players').doc(user.uid).delete()
+		})
+
 	}
 }

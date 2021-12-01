@@ -21,10 +21,10 @@ export class RoomComponent implements OnInit, OnDestroy {
 	room!: AngularFirestoreDocument<Room>
 	user = JSON.parse(<string>localStorage.getItem('user'))
 	players!: Observable<RoomPlayer[]>
-	roomID = this.route.snapshot.paramMap.get('roomId')
+	roomID = <string>this.route.snapshot.paramMap.get('roomId')
 	cards = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144]
 	visible = false
-	average = 0
+	average = null
 	spectate = localStorage.getItem('spectate')
 
 	constructor(
@@ -38,8 +38,8 @@ export class RoomComponent implements OnInit, OnDestroy {
 	}
 
 	async ngOnInit() {
-		// const player = await this.authService.getUser();
-		this.room = this.roomService.get(<string>this.roomID)
+		this.user = await this.authService.getUser()
+		this.room = this.roomService.get(this.roomID)
 		// @ts-ignore
 		this.room$ = await this.room.valueChanges()
 		this.players = this.roomService.joinUsers(this.room, this.user, this.roomID)
@@ -51,27 +51,25 @@ export class RoomComponent implements OnInit, OnDestroy {
 	}
 
 	chose(card: number) {
-		const room = this.roomService.get(<string>this.roomID)
-		const players = this.roomService.pickCard(room, this.user, card)
+		const players = this.roomService.pickCard(this.room, this.user, card)
 		return players
 	}
 
-	getUserName(id: string) {
-		return this.firestore.collection('players').doc(id).valueChanges()
-	}
-
 	showCards() {
-		this.average = 0
-		this.firestore.collection('rooms').doc(<string>this.roomID).collection('players').get().toPromise().then((players) => {
+
+		this.room.collection('players').get().toPromise().then((players) => {
 			players.forEach((doc) => {
-				localStorage.setItem('visible', 'true')
-				this.visible = <boolean>JSON.parse(<string>localStorage.getItem('visible'))
 				this.average = this.average + doc.data().card
 				console.log(doc.data())
 				doc.ref.update({
 					visible: true,
 				})
 			})
+			this.room.update({
+				// @ts-ignore
+				average: this.average / players.size,
+			})
+			// @ts-ignore
 			console.log(this.average / players.size)
 		})
 	}

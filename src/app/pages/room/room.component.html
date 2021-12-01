@@ -4,17 +4,25 @@
 			<p>{{room.name}}</p>
 		</div>
 	</div>
-
 	<div class="grid">
-		<div class="col-12 board surface-card shadow-2 p-3 border-round">
-			<div>
-				{{average}}
-			</div>
-		</div>
-		<div *ngFor="let player of players | async" class="players col m2">
-			<button (click)="showCards()" *ngIf="player.id === user.id && player.owner && player.card" class="showCards"
+		<div class="col">
+			<button (click)="showCards()" *ngIf="user.uid === room.created || !room.created" class="showCards"
 					pButton>Show cards
 			</button>
+		</div>
+	</div>
+	<div class="grid">
+		<div class="col-3"></div>
+		<div class="col-6 board surface-card shadow-2 p-3 border-round">
+			<div>
+				{{room.average}}
+			</div>
+		</div>
+		<div class="col-3"></div>
+	</div>
+	<div class="grid">
+		<div *ngFor="let player of players | async" class="players col m2">
+
 			<app-card [player]="player"></app-card>
 		</div>
 	</div>

@@ -4,8 +4,7 @@ export interface RoomPlayer {
 	card: number | null
 	status: boolean
 	visible: boolean
-	id: string
-	owner: boolean,
+	uid: string
 	spectate: boolean
 	player: Player
 }

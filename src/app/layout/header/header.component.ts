@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { MenuItem } from 'primeng/api'
 import { AuthService } from '../../services/auth.service'
-import { Player } from '../../interfaces/Player'
 
 @Component({
 	selector: 'app-header',
@@ -10,7 +9,7 @@ import { Player } from '../../interfaces/Player'
 })
 export class HeaderComponent implements OnInit {
 	items!: MenuItem[]
-	player!: Player
+	player!: any
 	checked: boolean = true
 
 	constructor(
@@ -47,5 +46,9 @@ export class HeaderComponent implements OnInit {
 
 	spectate() {
 		localStorage.setItem('spectate', `${this.checked}`)
+	}
+
+	async logout() {
+		await this.authService.signOut()
 	}
 }

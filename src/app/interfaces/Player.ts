@@ -1,5 +1,5 @@
 export interface Player {
-	id: string
 	uid: string
-	name: string
+	displayName?: string
+	name?: string
 }
