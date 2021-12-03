@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core'
 import { MenuItem } from 'primeng/api'
 import { AuthService } from '../../services/auth.service'
+import { ActivatedRoute } from '@angular/router'
+import { RoomService } from '../../services/room.service'
+import { AngularFirestoreDocument } from '@angular/fire/compat/firestore'
+import { Room } from '../../interfaces/Room'
 
 @Component({
 	selector: 'app-header',
@@ -10,14 +14,20 @@ import { AuthService } from '../../services/auth.service'
 export class HeaderComponent implements OnInit {
 	items!: MenuItem[]
 	player!: any
-	checked: boolean = true
+	checked: boolean = false
+	roomID = ''
+	room!: AngularFirestoreDocument<Room>
 
 	constructor(
-		private authService: AuthService) {
+		private authService: AuthService,
+		private route: ActivatedRoute,
+		private roomService: RoomService) {
 	}
 
-	ngOnInit(): void {
+	async ngOnInit() {
+		this.roomID = this.route.snapshot.children[0].params.roomId
 		this.player = this.authService.getUser()
+		this.room = this.roomService.get(this.roomID)
 		this.items = [
 			{
 				label: 'File',
@@ -45,9 +55,9 @@ export class HeaderComponent implements OnInit {
 	}
 
 	spectate() {
-		localStorage.setItem('spectate', `${this.checked}`)
+		this.roomService.spectate(this.room, this.player, this.checked)
+		// localStorage.setItem('spectate', `${this.checked}`)
 	}
-
 	async logout() {
 		await this.authService.signOut()
 	}

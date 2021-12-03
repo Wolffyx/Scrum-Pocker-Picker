@@ -56,7 +56,6 @@ export class RoomComponent implements OnInit, OnDestroy {
 	}
 
 	showCards() {
-
 		this.room.collection('players').get().toPromise().then((players) => {
 			players.forEach((doc) => {
 				this.average = this.average + doc.data().card
@@ -73,4 +72,5 @@ export class RoomComponent implements OnInit, OnDestroy {
 			console.log(this.average / players.size)
 		})
 	}
+
 }

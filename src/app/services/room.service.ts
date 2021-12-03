@@ -105,11 +105,30 @@ export class RoomService {
 		return this.afs.collection('rooms').doc<Room>(roomID).get({})
 	}
 
+	async spectate(room: AngularFirestoreDocument, user: Player, spectate: boolean) {
+		const playerRef = room.collection(!spectate ? 'spectators' : 'players').doc(user.uid)
+		const player = await playerRef.get().toPromise()
+		await playerRef.update({spectate: spectate})
+		console.log(player)
+		if (player.exists && spectate) {
+			// @ts-ignore
+			await room.collection('spectators').doc(user.uid).set(player.data())
+			await playerRef.delete()
+			console.log('unspectate', player.data())
+		} else {
+			await playerRef.delete()
+			// @ts-ignore
+			await room.collection('players').doc(user.uid).set(player.data())
+			console.log('spectate', player.data())
+		}
+	}
+
+	//todo remove user when tab closes
 	private removeUser(room: any, user: any) {
 		console.log(user.uid)
-		this.db.database.ref(user.uid).onDisconnect().update({status: 'offline'}).then(() => {
-			room.collection('players').doc(user.uid).delete()
-		})
-
+		// this.db.database.ref(user.uid).onDisconnect().remove((data)=>{
+		// 	console.log(data)
+		// 	room.collection("players").doc(user.uid).delete();
+		// })
 	}
 }
