@@ -9,6 +9,8 @@ import { ComponentsModule } from '../components/components.module'
 import { ButtonModule } from 'primeng/button'
 import { InputTextModule } from 'primeng/inputtext'
 import { CardModule } from 'primeng/card'
+import { RippleModule } from 'primeng/ripple'
+import { DialogModule } from 'primeng/dialog'
 
 
 @NgModule({
@@ -25,6 +27,8 @@ import { CardModule } from 'primeng/card'
 		ButtonModule,
 		InputTextModule,
 		CardModule,
+		RippleModule,
+		DialogModule,
 	],
 })
 export class PagesModule {

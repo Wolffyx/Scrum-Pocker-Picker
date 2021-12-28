@@ -6,5 +6,6 @@ export interface Room {
 	createdAt: Date,
 	players: RoomPlayer[]
 	created: string
-	average: number | null
+	showCards: boolean
+	firstPick: boolean
 }

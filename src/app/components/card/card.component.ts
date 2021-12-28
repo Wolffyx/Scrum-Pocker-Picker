@@ -9,6 +9,7 @@ import { RoomPlayer } from '../../interfaces/RoomPlayer'
 export class CardComponent implements OnInit {
 	number?: number = undefined
 	@Input('player') player!: RoomPlayer
+	@Input('showCards') showCards?: boolean
 
 	constructor() {
 	}

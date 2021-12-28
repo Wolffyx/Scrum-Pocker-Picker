@@ -1,10 +1,9 @@
-import { Player } from './Player'
+import firebase from 'firebase/compat'
+import UserInfo = firebase.UserInfo
 
 export interface RoomPlayer {
 	card: number | null
-	status: boolean
 	visible: boolean
 	uid: string
-	spectate: boolean
-	player: Player
+	user: Partial<UserInfo>
 }

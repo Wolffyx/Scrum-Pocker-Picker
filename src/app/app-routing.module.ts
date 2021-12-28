@@ -18,8 +18,17 @@ const routes: Routes = [
 		component: LayoutComponent,
 		canActivate: [AngularFireAuthGuard],
 		children: [
-			{path: '', component: HomeComponent},
-			{path: 'room/:roomId', component: RoomComponent},
+			{
+				path: '',
+				component: HomeComponent,
+				data: {
+					title: 'Scrum poker picker',
+				},
+			},
+			{
+				path: 'room/:roomId',
+				component: RoomComponent,
+			},
 		],
 		data: {authGuardPipe: redirectUnauthorizedToLogin},
 	},

@@ -28,6 +28,7 @@ export class HeaderComponent implements OnInit {
 		this.roomID = this.route.snapshot.children[0].params.roomId
 		this.player = this.authService.getUser()
 		this.room = this.roomService.get(this.roomID)
+		this.checked = await this.roomService.checkIfIsSpectator(this.room, this.player)
 		this.items = [
 			{
 				label: 'File',

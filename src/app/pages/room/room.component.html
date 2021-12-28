@@ -1,33 +1,59 @@
-<ng-container *ngIf="room$ | async as room">
-	<div class="grid flex-column align-items-center">
-		<div class="col">
+<ng-container *ngIf="room | async as room">
+	<!--	<div class="grid">-->
+	<!--		<div class="col" *ngIf="room.showCards; else showCardsButton">-->
+	<!--			<button (click)="resetBoard()" *ngIf="user.uid === room.created || !room.created" class="showCards"-->
+	<!--					pButton>Reset board-->
+	<!--			</button>-->
+	<!--		</div>-->
+	<!--		<ng-template #showCardsButton>-->
+	<!--			<div class="col">-->
+	<!--				<button (click)="showCards()" *ngIf="user.uid === room.created || !room.created" class="showCards"-->
+	<!--						pButton>Show cards-->
+	<!--				</button>-->
+	<!--			</div>-->
+	<!--		</ng-template>-->
+	<!--	</div>-->
+	<div class="grid">
+		<div class="col text-center">
 			<p>{{room.name}}</p>
+			<span *ngIf="room.showCards">{{averageSum((players | async) ?? [])}}</span>
 		</div>
 	</div>
 	<div class="grid">
-		<div class="col">
-			<button (click)="showCards()" *ngIf="user.uid === room.created || !room.created" class="showCards"
-					pButton>Show cards
-			</button>
+		<div class="col-4 board surface-card shadow-2 p-3 border-round text-center col-offset-4">
+			<!--			todo show text for non owner players-->
+			<ng-container *ngIf="room.firstPick && user.uid === room.created || !room.created; else textContent">
+				<div *ngIf="room.showCards; else showCardsButton">
+					<button (click)="resetBoard()"
+							class="p-button-outlined"
+							pButton pRipple>Reset board
+					</button>
+				</div>
+				<ng-template #showCardsButton>
+					<button (click)="showCards()"
+							class="p-button-outlined"
+							pButton pRipple>Show cards
+					</button>
+				</ng-template>
+			</ng-container>
+			<span *ngIf="!room.showCards && !room.firstPick">Chose card</span>
+			<ng-template #textContent>
+				<span *ngIf="room.firstPick && !room.showCards">Voting in process</span>
+				<span *ngIf="room.firstPick && room.showCards">Voting finished</span>
+			</ng-template>
 		</div>
 	</div>
-	<div class="grid">
-		<div class="col-3"></div>
-		<div class="col-6 board surface-card shadow-2 p-3 border-round text-center">
-			{{room.average}}
-		</div>
-		<div class="col-3"></div>
-	</div>
-	<div class="grid">
-		<div *ngFor="let player of players | async" class="players col m2">
 
-			<app-card [player]="player"></app-card>
+	<div class="grid justify-content-center align-items-center">
+		<div *ngFor="let player of players | async" class="players m-3">
+			<app-card [player]="player" [showCards]="room.showCards"></app-card>
 		</div>
 	</div>
-	<div class="grid bottom-0 fixed w-12">
+	<div *ngIf="!room.showCards" [@slideInOut] class="grid bottom-0 fixed w-12">
 		<div class="col">
 			<div class="surface-card shadow-2 p-3 border-round grid justify-content-center">
-				<button (click)="chose(card)" *ngFor="let card of cards" class="col m-1 card text-xl text-center"
+				<button (click)="chose(card)" *ngFor="let card of cards" [disabled]="room.showCards"
+						class="col m-1 card text-xl text-center"
 						label="{{card}}"
 						pButton></button>
 			</div>

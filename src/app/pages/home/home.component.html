@@ -1,1 +1,19 @@
-<button (click)="createRoom()" pButton>Create room</button>
+<div class="grid">
+	<div class="col">
+		<p-button (click)="showBasicDialog()" icon="pi pi-external-link" label="Show"></p-button>
+		<p-dialog [(visible)]="displayBasic" [dismissableMask]="true" header="Create room">
+			<div class="grid flex-column justify-content-center align-items-center align-content-center">
+				<div class="col">
+					<input [(ngModel)]="roomName" id="roomName" pInputText placeholder="Room name" type="text">
+				</div>
+			</div>
+
+			<ng-template pTemplate="footer">
+				<button (click)="createRoom()" [loading]="loading" class="p-button-text" icon="pi pi-check"
+						label="Create room"
+						pButton></button>
+				<!--		<p-button icon="pi pi-check" (click)="displayBasic=false" label="Ok" styleClass="p-button-text"></p-button>-->
+			</ng-template>
+		</p-dialog>
+	</div>
+</div>

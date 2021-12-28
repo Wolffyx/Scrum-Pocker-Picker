@@ -7,19 +7,23 @@ import * as cryptoJs from 'crypto-js'
 
 import { environment } from '../../environments/environment'
 import { Room } from '../interfaces/Room'
-import { Player } from '../interfaces/Player'
 import { RoomPlayer } from '../interfaces/RoomPlayer'
+import firebase from 'firebase/compat'
+import { Subject } from 'rxjs'
+import { Title } from '@angular/platform-browser'
+import UserInfo = firebase.UserInfo
 
 @Injectable({
 	providedIn: 'root',
 })
 export class RoomService {
-	player: any
+	player?: Subject<UserInfo>
 
 	constructor(
 		private afs: AngularFirestore,
 		private router: Router,
 		private db: AngularFireDatabase,
+		private title: Title,
 	) {
 	}
 
@@ -39,28 +43,31 @@ export class RoomService {
 		}
 		const ownerData: RoomPlayer = {
 			uid: player.uid,
-			player: {
+			user: {
 				uid: player.uid,
-				name: player.displayName,
+				displayName: player.displayName,
 			},
 			card: null,
-			status: true,
 			visible: false,
-			spectate: false,
 		}
+		const oldTitle = this.title.getTitle()
 		console.log(player)
 		const room = await this.afs.collection('rooms').add(data)
 		await room.collection('players').doc(player.uid).set(ownerData)
+		this.title.setTitle(name + ' ' + oldTitle)
 		return this.router.navigate(['room', room.id])
 	}
 
-	async pickCard(room: AngularFirestoreDocument<Room>, player: Player, card: number) {
+	async pickCard(room: AngularFirestoreDocument<Room>, player: UserInfo, card: number | null = null) {
 		const data = {
 			card,
 			picked: true,
 			visible: false,
 		}
-
+		await room.update({
+			// @ts-ignore
+			firstPick: true,
+		})
 		const ref = room.collection('players').doc(player.uid).update(data)
 		// const toastRef: NbToastRef = this.toast.success("Card picked");
 		// toastRef.close();
@@ -68,17 +75,15 @@ export class RoomService {
 	}
 
 	// @ts-ignore
-	joinUsers(room: AngularFirestoreDocument<Room>, player: Player, roomID): AngularFirestoreCollection<DocumentData> {
+	joinUsers(room: AngularFirestoreDocument<Room>, player: UserInfo, spectate: boolean = false): AngularFirestoreCollection<DocumentData> {
 		const data: RoomPlayer = {
 			uid: player.uid,
-			player: {
+			user: {
 				uid: player.uid,
-				name: player.displayName,
+				displayName: player.displayName,
 			},
 			card: null,
-			status: true,
 			visible: false,
-			spectate: false,
 		}
 		// const playerData = {id: player.id, uid: player.uid}
 		const players = room.collection('players')
@@ -90,13 +95,13 @@ export class RoomService {
 			}
 			console.log(player.exists)
 		})
-		console.log(roomID,
-			player.uid)
-		this.removeUser(room, player)
-		return players.valueChanges()
+		const spectators = room.collection('spectators')
+
+		// this.removeUser(room, player)
+		return {players: players.valueChanges(), spectators: spectators.valueChanges()}
 	}
 
-	deleteUser(room: AngularFirestoreDocument<Room>, player: Player) {
+	deleteUser(room: AngularFirestoreDocument<Room>, player: UserInfo) {
 		return room.collection('players').doc(player.uid).delete()
 	}
 
@@ -105,22 +110,26 @@ export class RoomService {
 		return this.afs.collection('rooms').doc<Room>(roomID).get({})
 	}
 
-	async spectate(room: AngularFirestoreDocument, user: Player, spectate: boolean) {
-		const playerRef = room.collection(!spectate ? 'spectators' : 'players').doc(user.uid)
+	async spectate(room: AngularFirestoreDocument, user: UserInfo, spectate: boolean) {
+		await this.moveUserFromCollection(room, !spectate ? 'spectators' : 'players', spectate ? 'spectators' : 'players', user)
+	}
+
+	async moveUserFromCollection(room: AngularFirestoreDocument, from: string, to: string, user: UserInfo) {
+		const playerRef = room.collection(from).doc(user.uid)
 		const player = await playerRef.get().toPromise()
-		await playerRef.update({spectate: spectate})
-		console.log(player)
-		if (player.exists && spectate) {
+		if (player.exists) {
 			// @ts-ignore
-			await room.collection('spectators').doc(user.uid).set(player.data())
+			await room.collection(to).doc(user.uid).set(player.data())
 			await playerRef.delete()
-			console.log('unspectate', player.data())
-		} else {
-			await playerRef.delete()
-			// @ts-ignore
-			await room.collection('players').doc(user.uid).set(player.data())
-			console.log('spectate', player.data())
 		}
+		return 'An error occurred'
+		//todo toast message
+	}
+
+	async checkIfIsSpectator(room: AngularFirestoreDocument, user: UserInfo) {
+		const playerRef = room.collection('spectators').doc(user.uid)
+		const player = await playerRef.get().toPromise()
+		return player.exists as boolean
 	}
 
 	//todo remove user when tab closes

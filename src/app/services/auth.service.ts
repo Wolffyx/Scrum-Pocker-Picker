@@ -5,16 +5,21 @@ import { Router } from '@angular/router'
 import { Player } from '../interfaces/Player'
 import { getAuth, onAuthStateChanged, signInAnonymously, updateProfile } from '@angular/fire/auth'
 import { Auth } from '@firebase/auth'
+import firebase from 'firebase/compat'
+import { BehaviorSubject } from 'rxjs'
+import UserInfo = firebase.UserInfo
 
 @Injectable({
 	providedIn: 'root',
 })
 export class AuthService {
 
-	user!: any
+	user?: UserInfo
+	// @ts-ignore
+	user$: BehaviorSubject<UserInfo> = new BehaviorSubject<UserInfo>(null)
 	player: Player = JSON.parse(<string>localStorage.getItem('user'))
 	roomID: string = ''
-	private auth: Auth | any
+	auth: Auth | any
 
 	constructor(
 		private afAuth: AngularFireAuth,
@@ -23,19 +28,21 @@ export class AuthService {
 	) {
 		this.auth = getAuth()
 		onAuthStateChanged(this.auth, (user) => {
-			this.user = user
-			if (user) {
-				console.log(user)
-			}
+			user ? this.user = user : console.log('User not logged in!')
+			// if (user) {
+			// 	this.user$.next(user)
+			// 	this.user = user
+			// }
 		})
 	}
 
 	getUser() {
-		return this.user
+		// return this.user$.value
+		return this.user as UserInfo
 	}
 
 	async signIn(name: string) {
-		await signInAnonymously(this.auth)
+		const user = await signInAnonymously(this.auth)
 			.then(async (user) => {
 				await updateProfile(this.auth.currentUser, {
 					displayName: name,
@@ -54,7 +61,9 @@ export class AuthService {
 		const auth = getAuth()
 		console.log(auth)
 		await auth.signOut()
-		await this.router.navigateByUrl('/')
+		// @ts-ignore
+		this.user$.next(null)
+		await this.router.navigateByUrl('/login')
 	}
 
 	// @ts-ignore

@@ -1,19 +1,14 @@
-<div class="grid flex-column align-items-center ">
+<div class="grid flex-column align-items-center">
 	<div class="col">
-		{{player.player.name}}
+		{{player.user.displayName}}
 	</div>
-	<div *ngIf="player.card && player.visible; else hiddenCard"
+	<div *ngIf="player.card && showCards; else hiddenCard"
 		 class="col shadow-2 p-1 border-round text-center card font-bold visibleCard">
-		<div *ngIf="player.visible">
-			{{player.card}}
-		</div>
+		{{player.card}}
 	</div>
 	<ng-template #hiddenCard>
 		<div [class]="player.card ? 'pickedCard': ''"
 			 class="col shadow-2 border-round card">
-			<div *ngIf="player.visible">
-				{{player.card}}
-			</div>
 		</div>
 	</ng-template>
 </div>
