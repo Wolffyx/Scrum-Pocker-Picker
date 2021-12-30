@@ -11,7 +11,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { ComponentsModule } from './components/components.module'
 import { PagesModule } from './pages/pages.module'
 import { AngularFireAuthModule } from '@angular/fire/compat/auth'
-import { LayoutModule } from './layout/layout.module'
+import { LayoutModule } from './layout/layout.module';
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { provideAnalytics,getAnalytics,ScreenTrackingService,UserTrackingService } from '@angular/fire/analytics';
+import { provideAuth,getAuth } from '@angular/fire/auth';
+import { provideDatabase,getDatabase } from '@angular/fire/database';
+import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+import { providePerformance,getPerformance } from '@angular/fire/performance'
 
 @NgModule({
 	declarations: [
@@ -32,8 +38,16 @@ import { LayoutModule } from './layout/layout.module'
 		ComponentsModule,
 		PagesModule,
 		LayoutModule,
+  provideFirebaseApp(() => initializeApp(environment.firebase)),
+  provideAnalytics(() => getAnalytics()),
+  provideAuth(() => getAuth()),
+  provideDatabase(() => getDatabase()),
+  provideFirestore(() => getFirestore()),
+  providePerformance(() => getPerformance()),
 	],
-	providers: [],
+	providers: [
+    ScreenTrackingService,UserTrackingService
+  ],
 	bootstrap: [AppComponent],
 })
 export class AppModule {
