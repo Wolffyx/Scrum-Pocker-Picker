@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core'
-import { AngularFirestore } from '@angular/fire/compat/firestore'
-import { AngularFireAuth } from '@angular/fire/compat/auth'
-import { Router } from '@angular/router'
-import { Player } from '../interfaces/Player'
-import { getAuth, onAuthStateChanged, signInAnonymously, updateProfile } from '@angular/fire/auth'
-import { Auth } from '@firebase/auth'
+import {Injectable} from '@angular/core'
+import {AngularFirestore} from '@angular/fire/compat/firestore'
+import {AngularFireAuth} from '@angular/fire/compat/auth'
+import {Router} from '@angular/router'
+import {Player} from '../interfaces/Player'
+import {getAuth, onAuthStateChanged, signInAnonymously, updateProfile} from '@angular/fire/auth'
+import {Auth} from '@firebase/auth'
 import firebase from 'firebase/compat'
-import { BehaviorSubject } from 'rxjs'
-import UserInfo = firebase.UserInfo
+import {BehaviorSubject} from 'rxjs'
+import UserInfo = firebase.UserInfo;
 
 @Injectable({
 	providedIn: 'root',

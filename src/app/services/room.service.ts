@@ -1,17 +1,17 @@
-import { Injectable } from '@angular/core'
-import { AngularFireDatabase } from '@angular/fire/compat/database'
+import {Injectable} from '@angular/core'
+import {AngularFireDatabase} from '@angular/fire/compat/database'
 
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore'
-import { Router } from '@angular/router'
+import {AngularFirestore, AngularFirestoreDocument} from '@angular/fire/compat/firestore'
+import {Router} from '@angular/router'
 import * as cryptoJs from 'crypto-js'
 
-import { environment } from '../../environments/environment'
-import { Room } from '../interfaces/Room'
-import { RoomPlayer } from '../interfaces/RoomPlayer'
+import {environment} from '../../environments/environment'
+import {Room} from '../interfaces/Room'
+import {RoomPlayer} from '../interfaces/RoomPlayer'
 import firebase from 'firebase/compat'
-import { Subject } from 'rxjs'
-import { Title } from '@angular/platform-browser'
-import UserInfo = firebase.UserInfo
+import {Subject} from 'rxjs'
+import {Title} from '@angular/platform-browser'
+import UserInfo = firebase.UserInfo;
 
 @Injectable({
 	providedIn: 'root',
@@ -89,6 +89,7 @@ export class RoomService {
 		const players = room.collection('players')
 		const playerData = players.doc(player.uid).get().toPromise()
 		playerData.then(async (player) => {
+			if (!player) return
 			if (!player.exists) {
 				await players.doc(player.id).set(data)
 				console.log('doesn\'t exist')
@@ -117,11 +118,12 @@ export class RoomService {
 	async moveUserFromCollection(room: AngularFirestoreDocument, from: string, to: string, user: UserInfo) {
 		const playerRef = room.collection(from).doc(user.uid)
 		const player = await playerRef.get().toPromise()
-		if (player.exists) {
-			// @ts-ignore
-			await room.collection(to).doc(user.uid).set(player.data())
-			await playerRef.delete()
-		}
+		if (player)
+			if (player.exists) {
+				// @ts-ignore
+				await room.collection(to).doc(user.uid).set(player.data())
+				await playerRef.delete()
+			}
 		return 'An error occurred'
 		//todo toast message
 	}
@@ -129,6 +131,7 @@ export class RoomService {
 	async checkIfIsSpectator(room: AngularFirestoreDocument, user: UserInfo) {
 		const playerRef = room.collection('spectators').doc(user.uid)
 		const player = await playerRef.get().toPromise()
+		if (!player) return false
 		return player.exists as boolean
 	}
 
