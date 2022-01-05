@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { Observable } from 'rxjs'
+import {lastValueFrom, Observable} from 'rxjs'
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore'
 import { AngularFireDatabase } from '@angular/fire/compat/database'
 import { RoomService } from '../../services/room.service'
@@ -62,7 +62,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
 	showCards() {
 		this.average = 0
-		this.firestore.collection('rooms').doc(<string>this.roomID).collection('players').get().toPromise().then((players) => {
+		lastValueFrom(this.firestore.collection('rooms').doc(<string>this.roomID).collection('players').get()).then((players) => {
 			players.forEach((doc) => {
 				localStorage.setItem('visible', 'true')
 				this.visible = <boolean>JSON.parse(<string>localStorage.getItem('visible'))

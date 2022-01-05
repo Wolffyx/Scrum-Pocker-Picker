@@ -11,6 +11,7 @@ import { environment } from '../../environments/environment'
 import { Room } from '../interfaces/Room'
 import { Player } from '../interfaces/Player'
 import { RoomPlayer } from '../interfaces/RoomPlayer'
+import {firstValueFrom, lastValueFrom} from "rxjs";
 
 @Injectable({
 	providedIn: 'root',
@@ -92,7 +93,7 @@ export class RoomService {
 		}
 		// const playerData = {id: player.id, uid: player.uid}
 		const players = room.collection('players')
-		const playerData = players.doc(player.id).get().toPromise()
+		const playerData = firstValueFrom(players.doc(player.id).get())
 		playerData.then(async (player) => {
 			if (!player.exists) {
 				await players.doc(player.id).set(data)
