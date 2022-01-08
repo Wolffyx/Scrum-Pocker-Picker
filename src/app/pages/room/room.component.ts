@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core'
-import {lastValueFrom, Observable} from 'rxjs'
+import {Observable} from 'rxjs'
 import {AngularFirestore, AngularFirestoreDocument} from '@angular/fire/compat/firestore'
 import {AngularFireDatabase} from '@angular/fire/compat/database'
 import {RoomService} from '../../services/room.service'
@@ -115,7 +115,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 			showCards: false,
 			firstPick: false,
 		})
-		lastValueFrom(this.roomDocument.collection('players').get()).then((players) => {
+		this.roomDocument.collection('players').get().toPromise().then((players) => {
 			players.forEach((doc) => {
 				console.log(doc.data())
 				doc.ref.update({
