@@ -1,6 +1,6 @@
 <div class="grid flex-column align-items-center">
 	<div class="col">
-		{{player.user.displayName}}
+		{{player.user?.displayName}}
 	</div>
 	<div *ngIf="player.card && showCards; else hiddenCard"
 		 class="col shadow-2 p-1 border-round text-center card font-bold visibleCard">

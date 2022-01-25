@@ -14,6 +14,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel'
 import { SlideMenuModule } from 'primeng/slidemenu'
 import { TableModule } from 'primeng/table'
 import { RippleModule } from 'primeng/ripple'
+import {DividerModule} from "primeng/divider";
 
 
 @NgModule({
@@ -23,19 +24,20 @@ import { RippleModule } from 'primeng/ripple'
 		ContentComponent,
 		LayoutComponent,
 	],
-	imports: [
-		CommonModule,
-		RouterModule,
-		CardModule,
-		MenubarModule,
-		InputSwitchModule,
-		FormsModule,
-		ButtonModule,
-		OverlayPanelModule,
-		SlideMenuModule,
-		TableModule,
-		RippleModule,
-	],
+    imports: [
+        CommonModule,
+        RouterModule,
+        CardModule,
+        MenubarModule,
+        InputSwitchModule,
+        FormsModule,
+        ButtonModule,
+        OverlayPanelModule,
+        SlideMenuModule,
+        TableModule,
+        RippleModule,
+        DividerModule,
+    ],
 	exports: [
 		HeaderComponent,
 	],
