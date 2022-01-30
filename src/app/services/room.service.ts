@@ -4,13 +4,15 @@ import {AngularFireDatabase} from '@angular/fire/compat/database'
 import {AngularFirestore, AngularFirestoreDocument} from '@angular/fire/compat/firestore'
 import {Router} from '@angular/router'
 import * as cryptoJs from 'crypto-js'
+import {Subject, firstValueFrom, lastValueFrom} from 'rxjs'
 
 import {environment} from '../../environments/environment'
 import {Room} from '../interfaces/Room'
+import { Player } from '../interfaces/Player'
 import {RoomPlayer} from '../interfaces/RoomPlayer'
-import firebase from 'firebase/compat'
-import {Subject} from 'rxjs'
 import {Title} from '@angular/platform-browser'
+
+import firebase from 'firebase/compat'
 import UserInfo = firebase.UserInfo;
 
 @Injectable({
@@ -87,7 +89,7 @@ export class RoomService {
 		}
 		// const playerData = {id: player.id, uid: player.uid}
 		const players = room.collection('players')
-		const playerData = players.doc(player.uid).get().toPromise()
+		const playerData = firstValueFrom(players.doc(player.id).get())
 		playerData.then(async (player) => {
 			if (!player) return
 			if (!player.exists) {

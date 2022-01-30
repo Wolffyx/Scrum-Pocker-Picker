@@ -1,16 +1,16 @@
-import {Component, OnDestroy, OnInit} from '@angular/core'
-import {Observable} from 'rxjs'
-import {AngularFirestore, AngularFirestoreDocument} from '@angular/fire/compat/firestore'
-import {AngularFireDatabase} from '@angular/fire/compat/database'
-import {RoomService} from '../../services/room.service'
-import {AuthService} from '../../services/auth.service'
-import {ActivatedRoute, Router} from '@angular/router'
-import {Room} from '../../interfaces/Room'
-import {RoomPlayer} from '../../interfaces/RoomPlayer'
+import { Component, OnDestroy, OnInit } from '@angular/core'
+import {lastValueFrom, Observable} from 'rxjs'
 import firebase from 'firebase/compat'
 import {sumBy} from 'lodash'
 import {animate, group, state, style, transition, trigger} from '@angular/animations'
 import UserInfo = firebase.UserInfo;
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore'
+import { AngularFireDatabase } from '@angular/fire/compat/database'
+import { RoomService } from '../../services/room.service'
+import { AuthService } from '../../services/auth.service'
+import { ActivatedRoute, Router } from '@angular/router'
+import { Room } from '../../interfaces/Room'
+import { RoomPlayer } from '../../interfaces/RoomPlayer'
 
 @Component({
 	selector: 'app-room',
