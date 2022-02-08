@@ -13,10 +13,8 @@ import UserInfo = firebase.UserInfo;
 	providedIn: 'root',
 })
 export class AuthService {
-
 	user?: UserInfo
-	// @ts-ignore
-	user$: BehaviorSubject<UserInfo> = new BehaviorSubject<UserInfo>(null)
+	user$: BehaviorSubject<UserInfo | undefined> = new BehaviorSubject<UserInfo | undefined>(undefined)
 	player: Player = JSON.parse(<string>localStorage.getItem('user'))
 	roomID: string = ''
 	auth: Auth | any
@@ -29,15 +27,10 @@ export class AuthService {
 		this.auth = getAuth()
 		onAuthStateChanged(this.auth, (user) => {
 			user ? this.user = user : console.log('User not logged in!')
-			// if (user) {
-			// 	this.user$.next(user)
-			// 	this.user = user
-			// }
 		})
 	}
 
 	getUser() {
-		// return this.user$.value
 		return this.user as UserInfo
 	}
 
@@ -47,13 +40,11 @@ export class AuthService {
 				await updateProfile(this.auth.currentUser, {
 					displayName: name,
 				})
-				// console.log(user.user)
 			})
 			.catch((error) => {
 				console.log(error)
 				const errorCode = error.code
 				const errorMessage = error.message
-				// ...
 			})
 	}
 
@@ -61,8 +52,7 @@ export class AuthService {
 		const auth = getAuth()
 		console.log(auth)
 		await auth.signOut()
-		// @ts-ignore
-		this.user$.next(null)
+		this.user$.next(undefined)
 		await this.router.navigateByUrl('/login')
 	}
 

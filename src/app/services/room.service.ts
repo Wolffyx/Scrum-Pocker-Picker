@@ -1,14 +1,13 @@
 import {Injectable} from '@angular/core'
 import {AngularFireDatabase} from '@angular/fire/compat/database'
 
-import {AngularFirestore, AngularFirestoreDocument} from '@angular/fire/compat/firestore'
+import {AngularFirestore, AngularFirestoreDocument, DocumentData} from '@angular/fire/compat/firestore'
 import {Router} from '@angular/router'
 import * as cryptoJs from 'crypto-js'
-import {Subject, firstValueFrom, lastValueFrom} from 'rxjs'
+import {firstValueFrom, Subject} from 'rxjs'
 
 import {environment} from '../../environments/environment'
 import {Room} from '../interfaces/Room'
-import { Player } from '../interfaces/Player'
 import {RoomPlayer} from '../interfaces/RoomPlayer'
 import {Title} from '@angular/platform-browser'
 
@@ -67,17 +66,12 @@ export class RoomService {
 			visible: false,
 		}
 		await room.update({
-			// @ts-ignore
 			firstPick: true,
 		})
 		const ref = room.collection('players').doc(player.uid).update(data)
-		// const toastRef: NbToastRef = this.toast.success("Card picked");
-		// toastRef.close();
-		// console.log(ref.)
 	}
 
-	// @ts-ignore
-	joinUsers(room: AngularFirestoreDocument<Room>, player: UserInfo, spectate: boolean = false): AngularFirestoreCollection<DocumentData> {
+	joinUsers(room: AngularFirestoreDocument<Room>, player: UserInfo, spectate: boolean = false): DocumentData {
 		const data: RoomPlayer = {
 			uid: player.uid,
 			user: {
@@ -87,9 +81,8 @@ export class RoomService {
 			card: null,
 			visible: false,
 		}
-		// const playerData = {id: player.id, uid: player.uid}
 		const players = room.collection('players')
-		const playerData = firstValueFrom(players.doc(player.id).get())
+		const playerData = firstValueFrom(players.doc(player.uid).get())
 		playerData.then(async (player) => {
 			if (!player) return
 			if (!player.exists) {
@@ -99,8 +92,6 @@ export class RoomService {
 			console.log(player.exists)
 		})
 		const spectators = room.collection('spectators')
-
-		// this.removeUser(room, player)
 		return {players: players.valueChanges(), spectators: spectators.valueChanges()}
 	}
 
@@ -119,7 +110,7 @@ export class RoomService {
 
 	async moveUserFromCollection(room: AngularFirestoreDocument, from: string, to: string, user: UserInfo) {
 		const playerRef = room.collection(from).doc(user.uid)
-		const player = await playerRef.get().toPromise()
+		const player = await firstValueFrom(playerRef.get())
 		if (player)
 			if (player.exists) {
 				// @ts-ignore
@@ -132,7 +123,7 @@ export class RoomService {
 
 	async checkIfIsSpectator(room: AngularFirestoreDocument, user: UserInfo) {
 		const playerRef = room.collection('spectators').doc(user.uid)
-		const player = await playerRef.get().toPromise()
+		const player = await firstValueFrom(playerRef.get())
 		if (!player) return false
 		return player.exists as boolean
 	}

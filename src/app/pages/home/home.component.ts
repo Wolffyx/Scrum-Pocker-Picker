@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core'
-import { RoomService } from '../../services/room.service'
-import { AuthService } from '../../services/auth.service'
-import { Title } from '@angular/platform-browser'
-import { ActivatedRoute } from '@angular/router'
+import {Component, OnInit} from '@angular/core'
+import {RoomService} from '../../services/room.service'
+import {AuthService} from '../../services/auth.service'
+import {Title} from '@angular/platform-browser'
+import {ActivatedRoute} from '@angular/router'
+import firebase from "firebase/compat";
+import UserInfo = firebase.UserInfo;
 
 @Component({
 	selector: 'app-home',
@@ -10,7 +12,7 @@ import { ActivatedRoute } from '@angular/router'
 	styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-	user: any
+	user?: UserInfo
 	displayBasic?: boolean
 	position?: string
 	roomName = ''

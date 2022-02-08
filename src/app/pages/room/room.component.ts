@@ -1,16 +1,16 @@
-import { Component, OnDestroy, OnInit } from '@angular/core'
-import {lastValueFrom, Observable} from 'rxjs'
+import {Component, OnDestroy, OnInit} from '@angular/core'
+import {firstValueFrom, Observable} from 'rxjs'
 import firebase from 'firebase/compat'
 import {sumBy} from 'lodash'
 import {animate, group, state, style, transition, trigger} from '@angular/animations'
+import {AngularFirestore, AngularFirestoreDocument} from '@angular/fire/compat/firestore'
+import {AngularFireDatabase} from '@angular/fire/compat/database'
+import {RoomService} from '../../services/room.service'
+import {AuthService} from '../../services/auth.service'
+import {ActivatedRoute, Router} from '@angular/router'
+import {Room} from '../../interfaces/Room'
+import {RoomPlayer} from '../../interfaces/RoomPlayer'
 import UserInfo = firebase.UserInfo;
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore'
-import { AngularFireDatabase } from '@angular/fire/compat/database'
-import { RoomService } from '../../services/room.service'
-import { AuthService } from '../../services/auth.service'
-import { ActivatedRoute, Router } from '@angular/router'
-import { Room } from '../../interfaces/Room'
-import { RoomPlayer } from '../../interfaces/RoomPlayer'
 
 @Component({
 	selector: 'app-room',
@@ -93,8 +93,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 	}
 
 	chose(card: number) {
-		const players = this.roomService.pickCard(this.roomDocument, this.user, card)
-		return players
+		return this.roomService.pickCard(this.roomDocument, this.user, card)
 	}
 
 	showCards() {
@@ -104,9 +103,6 @@ export class RoomComponent implements OnInit, OnDestroy {
 	}
 
 	averageSum(players: RoomPlayer[]) {
-		// console.log(sumBy(players, 'card'))
-		// console.log(players)
-		// console.log(countBy(players,'card'))
 		return players.length ? sumBy(players, 'card') / players.length : 0
 	}
 
@@ -115,7 +111,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 			showCards: false,
 			firstPick: false,
 		})
-		this.roomDocument.collection('players').get().toPromise().then((players) => {
+		firstValueFrom(this.roomDocument.collection('players').get()).then((players) => {
 			players.forEach((doc) => {
 				console.log(doc.data())
 				doc.ref.update({

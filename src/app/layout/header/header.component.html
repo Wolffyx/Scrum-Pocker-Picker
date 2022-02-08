@@ -1,21 +1,5 @@
-<!--<p-menubar>-->
-<!--	<ng-template pTemplate="start">-->
-<!--		<h3 routerLink="/">Scrum poker picker</h3>-->
-<!--	</ng-template>-->
-<!--	<ng-template pTemplate="end">-->
-<!--		<p-button (click)="op.show($event)" pRipple styleClass="p-button-outlined">-->
-<!--			<ng-template pTemplate="content">-->
-<!--				<span class="p-ml-2 p-text-bold">-->
-<!--					{{player?.displayName}} <i class="pi pi-user" style="font-size: 2rem"></i></span>-->
-<!--			</ng-template>-->
-<!--		</p-button>-->
-<!--	</ng-template>-->
-<!--</p-menubar>-->
-
 <div class="surface-overlay px-6 flex align-items-center justify-content-between relative lg:static"
 	 style="min-height: 80px;">
-	<!--	<img src="assets/images/blocks/logos/bastion-700.svg" alt="Image" height="40"-->
-	<!--		 class="mr-0 lg:mr-6">-->
 	<a pRipple="" pstyleclass="@next" enterclass="hidden" leavetoclass="hidden"
 	   class="p-ripple p-element cursor-pointer block text-700 p-2 text-decoration-none w-3" routerLink="/">
 		<h3>Scrum poker picker</h3>
@@ -27,32 +11,6 @@
 	</a>
 	<div
 		class="align-items-center flex-grow-1 justify-content-between hidden lg:flex absolute lg:static w-full surface-overlay left-0 top-100 z-1 shadow-2 lg:shadow-none">
-<!--		<ul class="list-none p-0 m-0 flex lg:align-items-center select-none flex-column lg:flex-row">-->
-<!--			&lt;!&ndash;			<li class="lg:relative">&ndash;&gt;-->
-<!--			&lt;!&ndash;				<a pRipple="" href="https://github.com/Wolffyx/Scrum-Pocker-Picker" target="_blank"&ndash;&gt;-->
-<!--			&lt;!&ndash;				   class="p-ripple p-element flex px-6 p-3 lg:px-3 lg:py-2 align-items-center text-600 hover:text-900&ndash;&gt;-->
-<!--			&lt;!&ndash;				   		hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150 text-decoration-none">&ndash;&gt;-->
-<!--			&lt;!&ndash;					<i class="pi pi-github mr-2"></i>&ndash;&gt;-->
-<!--			&lt;!&ndash;					<span>Github</span>&ndash;&gt;-->
-<!--			&lt;!&ndash;					<span class="p-ink"></span></a>&ndash;&gt;-->
-<!--			&lt;!&ndash;			</li>&ndash;&gt;-->
-<!--			&lt;!&ndash;			<li>&ndash;&gt;-->
-<!--			&lt;!&ndash;				<a pRipple=""&ndash;&gt;-->
-<!--			&lt;!&ndash;				   class="p-ripple p-element flex px-6 p-3 lg:px-3 lg:py-2 align-items-center text-600 hover:text-900 hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150">&ndash;&gt;-->
-<!--			&lt;!&ndash;					<i class="pi pi-calendar mr-2"></i>&ndash;&gt;-->
-<!--			&lt;!&ndash;					<span>Calendar</span>&ndash;&gt;-->
-<!--			&lt;!&ndash;					<span class="p-ink"></span>&ndash;&gt;-->
-<!--			&lt;!&ndash;				</a>&ndash;&gt;-->
-<!--			&lt;!&ndash;			</li>&ndash;&gt;-->
-<!--			&lt;!&ndash;			<li>&ndash;&gt;-->
-<!--			&lt;!&ndash;				<a pRipple=""&ndash;&gt;-->
-<!--			&lt;!&ndash;				   class="p-ripple p-element flex px-6 p-3 lg:px-3 lg:py-2 align-items-center text-600 hover:text-900 hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150">&ndash;&gt;-->
-<!--			&lt;!&ndash;					<i class="pi pi-chart-line mr-2"></i>&ndash;&gt;-->
-<!--			&lt;!&ndash;					<span>Stats</span>&ndash;&gt;-->
-<!--			&lt;!&ndash;					<span class="p-ink"></span>&ndash;&gt;-->
-<!--			&lt;!&ndash;				</a>&ndash;&gt;-->
-<!--			&lt;!&ndash;			</li>&ndash;&gt;-->
-<!--		</ul>-->
 		<ul class="list-none p-0 m-0 flex lg:align-items-center select-none flex-column lg:flex-row border-top-1 surface-border lg:border-top-none float-right" >
 			<li class="lg:relative">
 				<a pRipple="" href="https://github.com/Wolffyx/Scrum-Pocker-Picker" target="_blank"
@@ -62,37 +20,12 @@
 					<span class="block lg:hidden font-medium">Github</span>
 					<span class="p-ink"></span></a>
 			</li>
-			<!--			<li>-->
-			<!--				<a pRipple=""-->
-			<!--				   class="p-ripple p-element flex px-6 p-3 lg:px-3 lg:py-2 align-items-center text-600 hover:text-900 hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150">-->
-			<!--					<i class="pi pi-inbox text-base lg:text-2xl mr-2 lg:mr-0"></i>-->
-			<!--					<span class="block lg:hidden font-medium">Inbox</span>-->
-			<!--					<span class="p-ink"></span>-->
-			<!--				</a>-->
-			<!--			</li>-->
-			<!--			<li>-->
-			<!--				<a pRipple=""-->
-			<!--				   class="p-ripple p-element flex px-6 p-3 lg:px-3 lg:py-2 align-items-center text-600 hover:text-900 hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150">-->
-			<!--					<i pbadge="" severity="danger" class="pi pi-bell text-base lg:text-2xl mr-2 lg:mr-0"></i>-->
-			<!--					<span class="block lg:hidden font-medium">Notifications</span>-->
-			<!--					<span class="p-ink"></span>-->
-			<!--				</a>-->
-			<!--			</li>-->
 			<li class="border-top-1 surface-border lg:border-top-none">
 				<a pRipple=""
 				   class="p-ripple p-element flex px-6 p-3 lg:px-3 lg:py-2 align-items-center hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150"
 				   (click)="op.show($event)">
-					<!--							<span class="p-ml-2 p-text-bold">-->
-					<!--								{{player?.displayName}}-->
-					<!--								<i class="pi pi-user" style="font-size: 2rem"></i>-->
-					<!--							</span>-->
 					<span class="block font-medium">{{player?.displayName}} </span>
 					<i class="pi pi-user text-base lg:text-2xl mr-2 ml-1"></i>
-					<!--										<span class="p-ink"></span>-->
-					<!--					<div class="block lg:hidden">-->
-					<!--						<span class="text-900 font-medium">Josephine Lillard</span>-->
-					<!--						<span class="text-600 font-medium text-sm">Marketing Specialist</span>-->
-					<!--					</div>-->
 					<span class="p-ink"></span>
 				</a>
 			</li>
