@@ -1,31 +1,72 @@
-import { Component, OnDestroy, OnInit } from '@angular/core'
-import {lastValueFrom, Observable} from 'rxjs'
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore'
-import { AngularFireDatabase } from '@angular/fire/compat/database'
-import { RoomService } from '../../services/room.service'
-import { AuthService } from '../../services/auth.service'
-import { ActivatedRoute, Router } from '@angular/router'
-import { Room } from '../../interfaces/Room'
-import { RoomPlayer } from '../../interfaces/RoomPlayer'
+import {Component, OnDestroy, OnInit} from '@angular/core'
+import {firstValueFrom, Observable} from 'rxjs'
+import firebase from 'firebase/compat'
+import {sumBy} from 'lodash'
+import {animate, group, state, style, transition, trigger} from '@angular/animations'
+import {AngularFirestore, AngularFirestoreDocument} from '@angular/fire/compat/firestore'
+import {AngularFireDatabase} from '@angular/fire/compat/database'
+import {RoomService} from '../../services/room.service'
+import {AuthService} from '../../services/auth.service'
+import {ActivatedRoute, Router} from '@angular/router'
+import {Room} from '../../interfaces/Room'
+import {RoomPlayer} from '../../interfaces/RoomPlayer'
+import UserInfo = firebase.UserInfo;
 
 @Component({
 	selector: 'app-room',
 	templateUrl: './room.component.html',
 	styleUrls: ['./room.component.scss'],
+	animations: [
+		trigger('slideInOut', [
+			state('in', style({
+				height: '*',
+				opacity: 0,
+			})),
+			transition(':leave', [
+				style({
+					height: '*',
+					opacity: 1,
+				}),
+
+				group([
+					animate(300, style({
+						height: 0,
+					})),
+					animate('200ms ease-in-out', style({
+						'opacity': '0',
+					})),
+				]),
+
+			]),
+			transition(':enter', [
+				style({
+					height: '0',
+					opacity: 0,
+				}),
+
+				group([
+					animate(300, style({
+						height: '*',
+					})),
+					animate('400ms ease-in-out', style({
+						'opacity': '1',
+					})),
+				]),
+
+			]),
+		]),
+	],
 })
 export class RoomComponent implements OnInit, OnDestroy {
 
-	title = 'scrumPokerPicker'
-	items!: Observable<any>
-	room$!: Observable<Room>
-	room!: AngularFirestoreDocument<Room>
-	user = JSON.parse(<string>localStorage.getItem('user'))
-	players!: Observable<RoomPlayer[]>
-	roomID = this.route.snapshot.paramMap.get('roomId')
-	cards = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144]
+	roomID = <string>this.route.snapshot.paramMap.get('roomId')
+	roomDocument: AngularFirestoreDocument<Room> = this.roomService.get(this.roomID)
+	room?: Observable<Room | undefined>
+	user!: UserInfo
+	players?: Observable<RoomPlayer[]>
+	cards = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144]
 	visible = false
-	average = 0
-	spectate = localStorage.getItem('spectate')
+	average = null
 
 	constructor(
 		private firestore: AngularFirestore,
@@ -38,41 +79,51 @@ export class RoomComponent implements OnInit, OnDestroy {
 	}
 
 	async ngOnInit() {
-		// const player = await this.authService.getUser();
-		this.room = this.roomService.get(<string>this.roomID)
-		// @ts-ignore
-		this.room$ = await this.room.valueChanges()
-		this.players = this.roomService.joinUsers(this.room, this.user, this.roomID)
+		this.user = await this.authService.getUser()
+		const room = await this.roomDocument.valueChanges()
+		if (room) {
+			this.players = (this.roomService.joinUsers(this.roomDocument, this.user)).players
+			this.room = room
+		}
 
 	}
 
 	ngOnDestroy() {
-		this.roomService.deleteUser(this.room, this.user)
+		this.roomService.deleteUser(this.roomDocument, this.user)
 	}
 
 	chose(card: number) {
-		const room = this.roomService.get(<string>this.roomID)
-		const players = this.roomService.pickCard(room, this.user, card)
-		return players
-	}
-
-	getUserName(id: string) {
-		return this.firestore.collection('players').doc(id).valueChanges()
+		return this.roomService.pickCard(this.roomDocument, this.user, card)
 	}
 
 	showCards() {
-		this.average = 0
-		lastValueFrom(this.firestore.collection('rooms').doc(<string>this.roomID).collection('players').get()).then((players) => {
+		this.roomDocument.update({
+			showCards: true,
+		})
+	}
+
+	averageSum(players: RoomPlayer[]) {
+		return players.length ? sumBy(players, 'card') / players.length : 0
+	}
+
+	resetBoard() {
+		this.roomDocument.update({
+			showCards: false,
+			firstPick: false,
+		})
+		firstValueFrom(this.roomDocument.collection('players').get()).then((players) => {
 			players.forEach((doc) => {
-				localStorage.setItem('visible', 'true')
-				this.visible = <boolean>JSON.parse(<string>localStorage.getItem('visible'))
-				this.average = this.average + doc.data().card
 				console.log(doc.data())
 				doc.ref.update({
-					visible: true,
+					card: null,
 				})
 			})
-			console.log(this.average / players.size)
+
 		})
+	}
+
+	createChart() {
+		let randomColor = Math.floor(Math.random() * 16777215).toString(16)
+		console.log(randomColor)
 	}
 }

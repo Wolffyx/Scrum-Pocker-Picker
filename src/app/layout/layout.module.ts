@@ -9,6 +9,12 @@ import { CardModule } from 'primeng/card'
 import { MenubarModule } from 'primeng/menubar'
 import { InputSwitchModule } from 'primeng/inputswitch'
 import { FormsModule } from '@angular/forms'
+import { ButtonModule } from 'primeng/button'
+import { OverlayPanelModule } from 'primeng/overlaypanel'
+import { SlideMenuModule } from 'primeng/slidemenu'
+import { TableModule } from 'primeng/table'
+import { RippleModule } from 'primeng/ripple'
+import {DividerModule} from "primeng/divider";
 
 
 @NgModule({
@@ -18,14 +24,20 @@ import { FormsModule } from '@angular/forms'
 		ContentComponent,
 		LayoutComponent,
 	],
-	imports: [
-		CommonModule,
-		RouterModule,
-		CardModule,
-		MenubarModule,
-		InputSwitchModule,
-		FormsModule,
-	],
+    imports: [
+        CommonModule,
+        RouterModule,
+        CardModule,
+        MenubarModule,
+        InputSwitchModule,
+        FormsModule,
+        ButtonModule,
+        OverlayPanelModule,
+        SlideMenuModule,
+        TableModule,
+        RippleModule,
+        DividerModule,
+    ],
 	exports: [
 		HeaderComponent,
 	],

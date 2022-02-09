@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core'
-import { RoomService } from '../../services/room.service'
-import { AuthService } from '../../services/auth.service'
-import { Player } from '../../interfaces/Player'
+import {Component, OnInit} from '@angular/core'
+import {RoomService} from '../../services/room.service'
+import {AuthService} from '../../services/auth.service'
+import {Title} from '@angular/platform-browser'
+import {ActivatedRoute} from '@angular/router'
+import firebase from "firebase/compat";
+import UserInfo = firebase.UserInfo;
 
 @Component({
 	selector: 'app-home',
@@ -9,20 +12,37 @@ import { Player } from '../../interfaces/Player'
 	styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-	user: Player | any
+	user?: UserInfo
+	displayBasic?: boolean
+	position?: string
+	roomName = ''
+	loading = false
 
 	constructor(
 		private pick: RoomService,
 		private authService: AuthService,
+		private titleService: Title,
+		private route: ActivatedRoute,
 	) {
 	}
 
 	async ngOnInit() {
 		this.user = await this.authService.getUser()
+		this.titleService.setTitle(this.route.snapshot.data['title'])
 	}
 
 
-	test() {
-		this.pick.create('test', this.user)
+	createRoom() {
+		this.loading = true
+		console.log(this.roomName)
+		this.pick.create(this.roomName, this.user).finally(() => {
+			this.loading = false
+			this.displayBasic = false
+		})
 	}
+
+	showBasicDialog() {
+		this.displayBasic = true
+	}
+
 }

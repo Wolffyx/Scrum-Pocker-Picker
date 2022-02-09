@@ -90,4 +90,8 @@ $sizes: 12;
 	}
 }
 
+.text-decoration-none{
+	text-decoration:none;
+}
+
 @include padding-classes;

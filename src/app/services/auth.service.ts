@@ -1,67 +1,71 @@
-import { Injectable } from '@angular/core'
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore'
-import { AngularFireAuth } from '@angular/fire/compat/auth'
-import { Router } from '@angular/router'
-import { v4 as uuidv4 } from 'uuid'
-import { Player } from '../interfaces/Player'
+import {Injectable} from '@angular/core'
+import {AngularFirestore} from '@angular/fire/compat/firestore'
+import {AngularFireAuth} from '@angular/fire/compat/auth'
+import {Router} from '@angular/router'
+import {Player} from '../interfaces/Player'
+import {getAuth, onAuthStateChanged, signInAnonymously, updateProfile} from '@angular/fire/auth'
+import {Auth} from '@firebase/auth'
+import firebase from 'firebase/compat'
+import {BehaviorSubject} from 'rxjs'
+import UserInfo = firebase.UserInfo;
 
 @Injectable({
 	providedIn: 'root',
 })
 export class AuthService {
-
-	user$!: AngularFirestoreDocument<Player>
+	user?: UserInfo
+	user$: BehaviorSubject<UserInfo | undefined> = new BehaviorSubject<UserInfo | undefined>(undefined)
 	player: Player = JSON.parse(<string>localStorage.getItem('user'))
+	roomID: string = ''
+	auth: Auth | any
 
 	constructor(
 		private afAuth: AngularFireAuth,
 		private afs: AngularFirestore,
 		private router: Router,
 	) {
+		this.auth = getAuth()
+		onAuthStateChanged(this.auth, (user) => {
+			user ? this.user = user : console.log('User not logged in!')
+		})
 	}
 
-	getUser(): Player {
-		return this.player
-		// return this.afs.collection<Player[]>('players').doc<Player>(this.player.id)
-		// 	.snapshotChanges()
-		// 	.pipe(map((player)=>{
-		// 		return player;
-		// 	})).toPromise()
+	getUser() {
+		return this.user as UserInfo
 	}
 
-	async signIn(username: string) {
-		const uid = uuidv4()
-		await this.createUser({uid, name: username})
+	async signIn(name: string) {
+		const user = await signInAnonymously(this.auth)
+			.then(async (user) => {
+				await updateProfile(this.auth.currentUser, {
+					displayName: name,
+				})
+			})
+			.catch((error) => {
+				console.log(error)
+				const errorCode = error.code
+				const errorMessage = error.message
+			})
 	}
 
 	async signOut() {
-		localStorage.removeItem('username')
-		localStorage.removeItem('token')
-		return this.router.navigate(['/'])
+		const auth = getAuth()
+		console.log(auth)
+		await auth.signOut()
+		this.user$.next(undefined)
+		await this.router.navigateByUrl('/login')
 	}
 
 	// @ts-ignore
-	private async updateUserData(uid, name) {
-		const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${uid}`)
-		const data = {
-			uid,
-			name,
-		}
+	// private async updateUserData(uid, name) {
+	// 	const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${uid}`)
+	// 	const data = {
+	// 		uid,
+	// 		name,
+	// 	}
+	//
+	// 	return userRef.set(data, {merge: true})
+	// }
 
-		return userRef.set(data, {merge: true})
-	}
 
-	// @ts-ignore
-	private async createUser({uid, name}) {
-
-		const id = this.afs.createId()
-		let data = {
-			id,
-			uid,
-			name,
-		}
-		const docRef = await this.afs.collection('players').add(data)
-
-		localStorage.setItem('user', JSON.stringify(data))
-	}
 }

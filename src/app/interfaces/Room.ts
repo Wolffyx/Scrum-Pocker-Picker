@@ -1,5 +1,4 @@
 import { RoomPlayer } from './RoomPlayer'
-import firebase from 'firebase/compat'
 
 export interface Room {
 	uid: string,
@@ -7,4 +6,6 @@ export interface Room {
 	createdAt: Date,
 	players: RoomPlayer[]
 	created: string
+	showCards: boolean
+	firstPick: boolean
 }

@@ -1,13 +1,12 @@
-<div class="grid">
-	<div class="col">
-		<p-card>
-			<ng-template pTemplate="header">
-				Header content here
-			</ng-template>
-			<input [(ngModel)]="username" pInputText placeholder="Username" type="text">
-			<ng-template pTemplate="footer">
-				<button (click)="login()" pButton>test</button>
-			</ng-template>
-		</p-card>
+<div class="surface-section px-4 py-8 md:px-6 lg:px-8">
+	<div class="text-700 text-center">
+		<div class="text-900 font-bold text-5xl mb-3">Insert your name</div>
+		<div class="text-700 text-2xl mb-5">
+				<span class="p-float-label">
+					<input [(ngModel)]="username" id="username" pInputText type="text" placeholder="Username" required name="username">
+				</span>
+		</div>
+		<button pButton pRipple label="Log in" icon="pi pi-sign-in"
+				class="font-bold px-5 py-3 p-button-raised white-space-nowrap" (click)="login()" [disabled]="!username" ></button>
 	</div>
 </div>

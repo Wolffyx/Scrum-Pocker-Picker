@@ -2,6 +2,7 @@
 {
 	"compileOnSave": false,
 	"compilerOptions": {
+		"skipLibCheck": true,
 		"baseUrl": "./",
 		"outDir": "./dist/out-tsc",
 		"forceConsistentCasingInFileNames": true,
@@ -19,8 +20,7 @@
 		"lib": [
 			"es2018",
 			"dom"
-		],
-		"skipLibCheck": true
+		]
 	},
 	"angularCompilerOptions": {
 		"enableI18nLegacyMessageIdFormat": false,

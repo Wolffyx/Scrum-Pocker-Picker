@@ -1,1 +1,20 @@
-<button (click)="test()" pButton>test</button>
+<div class="surface-section px-4 py-8 md:px-6 lg:px-8">
+	<div class="text-700 text-center">
+		<p-button (click)="displayBasic=true" icon="pi pi-plus" label="Create room"></p-button>
+		<p-dialog [(visible)]="displayBasic" [dismissableMask]="true" header="Create room" [closeOnEscape]="true">
+			<div class="grid flex-column justify-content-center align-items-center align-content-center">
+				<div class="col">
+					<input [(ngModel)]="roomName" id="roomName" pInputText placeholder="Room name" type="text">
+				</div>
+			</div>
+			<ng-template pTemplate="footer">
+				<button (click)="displayBasic=false" class="p-button-text p-button-danger" icon="pi pi-times"
+						label="Cancel"
+						pButton></button>
+				<button (click)="createRoom()" [loading]="loading" class="p-button-text" icon="pi pi-check"
+						label="Create room"
+						pButton></button>
+			</ng-template>
+		</p-dialog>
+	</div>
+</div>

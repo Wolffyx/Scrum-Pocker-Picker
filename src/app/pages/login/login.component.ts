@@ -28,6 +28,11 @@ export class LoginComponent implements OnInit {
 	async login() {
 		console.log(this.username)
 		await this.authService.signIn(this.username)
-		await this.router.navigateByUrl(this.returnUrl)
+		await this.location.back()
+		// await this.router.navigateByUrl(this.returnUrl)
+	}
+
+	async logout() {
+		await this.authService.signOut()
 	}
 }
