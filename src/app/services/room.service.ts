@@ -34,8 +34,11 @@ export class RoomService {
 			.doc(roomID)
 	}
 
-	async create(name: string, player: any) {
+	async create(name: string, player?: UserInfo) {
 		const uid = cryptoJs.AES.encrypt(name, environment.key).toString()
+		if (!player) {
+			return "User not found"/* to do toast*/
+		}
 		const data = {
 			uid,
 			name,
@@ -84,7 +87,6 @@ export class RoomService {
 		const players = room.collection('players')
 		const playerData = firstValueFrom(players.doc(player.uid).get())
 		playerData.then(async (player) => {
-			if (!player) return
 			if (!player.exists) {
 				await players.doc(player.id).set(data)
 				console.log('doesn\'t exist')
@@ -111,13 +113,12 @@ export class RoomService {
 	async moveUserFromCollection(room: AngularFirestoreDocument, from: string, to: string, user: UserInfo) {
 		const playerRef = room.collection(from).doc(user.uid)
 		const player = await firstValueFrom(playerRef.get())
-		if (player)
-			if (player.exists) {
-				// @ts-ignore
-				await room.collection(to).doc(user.uid).set(player.data())
-				await playerRef.delete()
-			}
-		return 'An error occurred'
+		const data = player.data();
+		if (player.exists && data) {
+			await room.collection(to).doc(user.uid).set(data)
+			await playerRef.delete()
+		}
+		return "Moved successfully"
 		//todo toast message
 	}
 
@@ -125,7 +126,7 @@ export class RoomService {
 		const playerRef = room.collection('spectators').doc(user.uid)
 		const player = await firstValueFrom(playerRef.get())
 		if (!player) return false
-		return player.exists as boolean
+		return player.exists
 	}
 
 	//todo remove user when tab closes

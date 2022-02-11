@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core'
-import { MenuItem } from 'primeng/api'
-import { AuthService } from '../../services/auth.service'
-import { ActivatedRoute } from '@angular/router'
-import { RoomService } from '../../services/room.service'
-import { AngularFirestoreDocument } from '@angular/fire/compat/firestore'
-import { Room } from '../../interfaces/Room'
+import {Component, OnInit} from '@angular/core'
+import {MenuItem} from 'primeng/api'
+import {AuthService} from '../../services/auth.service'
+import {ActivatedRoute} from '@angular/router'
+import {RoomService} from '../../services/room.service'
+import {AngularFirestoreDocument} from '@angular/fire/compat/firestore'
+import {Room} from '../../interfaces/Room'
+import firebase from "firebase/compat";
+import UserInfo = firebase.UserInfo;
 
 @Component({
 	selector: 'app-header',
@@ -13,7 +15,7 @@ import { Room } from '../../interfaces/Room'
 })
 export class HeaderComponent implements OnInit {
 	items!: MenuItem[]
-	player!: any
+	player!: UserInfo
 	checked: boolean = false
 	roomID = ''
 	room!: AngularFirestoreDocument<Room>
@@ -55,10 +57,10 @@ export class HeaderComponent implements OnInit {
 		]
 	}
 
-	spectate() {
-		this.roomService.spectate(this.room, this.player, this.checked)
-		// localStorage.setItem('spectate', `${this.checked}`)
+	async spectate() {
+		await this.roomService.spectate(this.room, this.player, this.checked)
 	}
+
 	async logout() {
 		await this.authService.signOut()
 	}
