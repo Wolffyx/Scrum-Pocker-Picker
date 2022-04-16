@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import {Component, HostListener, OnInit} from '@angular/core'
 import {PrimeNGConfig} from "primeng/api";
 
 @Component({
@@ -8,13 +8,17 @@ import {PrimeNGConfig} from "primeng/api";
 })
 export class AppComponent implements OnInit {
 
-	constructor(private primengConfig: PrimeNGConfig){
+	constructor(private primengConfig: PrimeNGConfig) {
 
 	}
+
+	@HostListener('window:beforeunload')
+	doSomething() {
+		alert("asdasdasd");
+	}
+
 	ngOnInit() {
 		this.primengConfig.ripple = true;
-		window.onbeforeunload = () => {
-			alert('test')
-		}
+
 	}
 }
